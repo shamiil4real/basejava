@@ -5,20 +5,20 @@ import java.util.Arrays;
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
-    private int currentIndex = 0;
+    private int size;
 
     void clear() {
-        Arrays.fill(storage, 0, currentIndex, null);
-        currentIndex = 0;
+        Arrays.fill(storage, 0, size, null);
+        size = 0;
     }
 
     void save(Resume r) {
-        storage[currentIndex] = r;
-        currentIndex++;
+        storage[size] = r;
+        size++;
     }
 
     Resume get(String uuid) {
-        for (int i = 0; i < currentIndex; i++) {
+        for (int i = 0; i < size; i++) {
             if (storage[i].uuid.equals(uuid)) {
                 return storage[i];
             }
@@ -27,25 +27,26 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-        for (int i = 0; i < currentIndex; i++) {
+        for (int i = 0; i < size; i++) {
             if (storage[i].uuid.equals(uuid)) {
-                for (int j = i; j < currentIndex - 1; j++) {
+                for (int j = i; j < size - 1; j++) {
                     storage[j] = storage[j + 1];
                 }
-                storage[currentIndex] = null;
+                storage[size] = null;
+                size--;
+                break;
             }
         }
-        currentIndex--;
     }
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        return Arrays.copyOf(storage, currentIndex);
+        return Arrays.copyOf(storage, size);
     }
 
     int size() {
-        return currentIndex;
+        return size;
     }
 }
