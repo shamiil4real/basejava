@@ -11,7 +11,7 @@ public class ArrayStorage {
     private Resume[] storage = new Resume[10000];
     private int size;
 
-    void update(Resume r) {
+    public void update(Resume r) {
         if (isPresent(r.getUuid())) {
             for (int i = 0; i < size; i++) {
                 if (storage[i].getUuid().equals(r.getUuid())) {
