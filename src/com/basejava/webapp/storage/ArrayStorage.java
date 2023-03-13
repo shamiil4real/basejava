@@ -80,7 +80,7 @@ public class ArrayStorage {
         return size;
     }
 
-    boolean isPresent(String uuid) {
+    public boolean isPresent(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return true;
