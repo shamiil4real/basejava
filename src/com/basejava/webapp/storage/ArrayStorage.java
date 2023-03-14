@@ -4,20 +4,16 @@ import com.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
 
-/**
- * Array based storage for Resumes
- */
 public class ArrayStorage {
+
     private Resume[] storage = new Resume[10000];
     private int size;
+    private static final int STORAGE_LIMIT = 10000;
 
     public void update(Resume r) {
-        if (isPresent(r.getUuid())) {
-            for (int i = 0; i < size; i++) {
-                if (storage[i].getUuid().equals(r.getUuid())) {
-                    storage[i] = r;
-                }
-            }
+        int tmp = isPresent(r.getUuid());
+        if (tmp >= 0) {
+            storage[tmp] = r;
         } else {
             System.out.println("Ошибка! Разюме " + r.getUuid() + " не существует");
         }
@@ -29,10 +25,11 @@ public class ArrayStorage {
     }
 
     public void save(Resume r) {
-        if (size >= storage.length) {
+        int tmp = isPresent(r.getUuid());
+        if (size >= STORAGE_LIMIT) {
             System.out.println("Ошибка! Нет места для сохранения разюме");
         } else {
-            if (!isPresent(r.getUuid())) {
+            if (tmp < 0) {
                 storage[size] = r;
                 size++;
             } else {
@@ -42,12 +39,9 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        if (isPresent(uuid)) {
-            for (int i = 0; i < size; i++) {
-                if (storage[i].getUuid().equals(uuid)) {
-                    return storage[i];
-                }
-            }
+        int tmp = isPresent(uuid);
+        if (tmp >= 0) {
+            return storage[tmp];
         } else {
             System.out.println("Ошибка! Разюме " + uuid + " не существует");
         }
@@ -55,23 +49,16 @@ public class ArrayStorage {
     }
 
     public void delete(String uuid) {
-        if (isPresent(uuid)) {
-            for (int i = 0; i < size; i++) {
-                if (storage[i].getUuid().equals(uuid)) {
-                    storage[i] = storage[size - 1];
-                    storage[size - 1] = null;
-                    size--;
-                    break;
-                }
-            }
+        int tmp = isPresent(uuid);
+        if (tmp >= 0) {
+            storage[tmp] = storage[size - 1];
+            storage[size - 1] = null;
+            size--;
         } else {
             System.out.println("Ошибка! Разюме " + uuid + " не существует");
         }
     }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
     public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
@@ -80,12 +67,12 @@ public class ArrayStorage {
         return size;
     }
 
-    public boolean isPresent(String uuid) {
+    public int isPresent(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
-                return true;
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 }
