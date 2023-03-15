@@ -16,7 +16,7 @@ public class ArrayStorage {
         if (tmp >= 0) {
             storage[tmp] = r;
         } else {
-            System.out.println("Ошибка! Разюме " + r.getUuid() + " не существует");
+            System.out.println("Ошибка! Резюме " + r.getUuid() + " не существует");
         }
     }
 
@@ -28,13 +28,13 @@ public class ArrayStorage {
     public void save(Resume r) {
         int tmp = resumeIndex(r.getUuid());
         if (size >= STORAGE_LIMIT) {
-            System.out.println("Ошибка! Нет места для сохранения разюме");
+            System.out.println("Ошибка! Нет места для сохранения резюме");
         } else {
             if (tmp < 0) {
                 storage[size] = r;
                 size++;
             } else {
-                System.out.println("Ошибка! Разюме " + r.getUuid() + " уже существует");
+                System.out.println("Ошибка! Резюме " + r.getUuid() + " уже существует");
             }
         }
     }
@@ -44,7 +44,7 @@ public class ArrayStorage {
         if (tmp >= 0) {
             return storage[tmp];
         } else {
-            System.out.println("Ошибка! Разюме " + uuid + " не существует");
+            System.out.println("Ошибка! Резюме " + uuid + " не существует");
         }
         return null;
     }
@@ -56,7 +56,7 @@ public class ArrayStorage {
             storage[size - 1] = null;
             size--;
         } else {
-            System.out.println("Ошибка! Разюме " + uuid + " не существует");
+            System.out.println("Ошибка! Резюме " + uuid + " не существует");
         }
     }
 
