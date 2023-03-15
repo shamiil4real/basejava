@@ -6,12 +6,13 @@ import java.util.Arrays;
 
 public class ArrayStorage {
 
-    private Resume[] storage = new Resume[10000];
-    private int size;
     private static final int STORAGE_LIMIT = 10000;
 
+    private Resume[] storage = new Resume[STORAGE_LIMIT];
+    private int size;
+
     public void update(Resume r) {
-        int tmp = isPresent(r.getUuid());
+        int tmp = resumeIndex(r.getUuid());
         if (tmp >= 0) {
             storage[tmp] = r;
         } else {
@@ -25,7 +26,7 @@ public class ArrayStorage {
     }
 
     public void save(Resume r) {
-        int tmp = isPresent(r.getUuid());
+        int tmp = resumeIndex(r.getUuid());
         if (size >= STORAGE_LIMIT) {
             System.out.println("Ошибка! Нет места для сохранения разюме");
         } else {
@@ -39,7 +40,7 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        int tmp = isPresent(uuid);
+        int tmp = resumeIndex(uuid);
         if (tmp >= 0) {
             return storage[tmp];
         } else {
@@ -49,7 +50,7 @@ public class ArrayStorage {
     }
 
     public void delete(String uuid) {
-        int tmp = isPresent(uuid);
+        int tmp = resumeIndex(uuid);
         if (tmp >= 0) {
             storage[tmp] = storage[size - 1];
             storage[size - 1] = null;
@@ -67,7 +68,7 @@ public class ArrayStorage {
         return size;
     }
 
-    public int isPresent(String uuid) {
+    public int resumeIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
