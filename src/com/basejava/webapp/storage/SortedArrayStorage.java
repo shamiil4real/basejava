@@ -26,7 +26,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    public final void delete(String uuid) {
+    public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index >= 0) {
             for (int i = index; i < size - 1; i++) {

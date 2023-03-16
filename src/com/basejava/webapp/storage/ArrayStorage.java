@@ -18,7 +18,7 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    public final void delete(String uuid) {
+    public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index >= 0) {
             STORAGE[index] = STORAGE[size - 1];
