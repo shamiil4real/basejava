@@ -2,29 +2,14 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.model.Resume;
 
-import java.util.Arrays;
-
 public class ArrayStorage extends AbstractArrayStorage {
 
-    public void clear() {
-        Arrays.fill(STORAGE, 0, size, null);
-        size = 0;
-    }
-
-    public void update(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index != -1) {
-            STORAGE[index] = r;
-        } else {
-            System.out.println("Ошибка! Резюме " + r.getUuid() + " не существует");
-        }
-    }
-
+    @Override
     public void save(Resume r) {
         int index = getIndex(r.getUuid());
         if (size >= STORAGE_LIMIT) {
             System.out.println("Ошибка! Нет места для сохранения резюме");
-        } else if (index != -1) {
+        } else if (index >= 0) {
             System.out.println("Ошибка! Резюме " + r.getUuid() + " уже существует");
         } else {
             STORAGE[size] = r;
@@ -32,9 +17,10 @@ public class ArrayStorage extends AbstractArrayStorage {
         }
     }
 
-    public void delete(String uuid) {
+    @Override
+    public final void delete(String uuid) {
         int index = getIndex(uuid);
-        if (index != -1) {
+        if (index >= 0) {
             STORAGE[index] = STORAGE[size - 1];
             STORAGE[size - 1] = null;
             size--;
@@ -43,11 +29,8 @@ public class ArrayStorage extends AbstractArrayStorage {
         }
     }
 
-    public Resume[] getAll() {
-        return Arrays.copyOf(STORAGE, size);
-    }
-
-    public int getIndex(String uuid) {
+    @Override
+    protected int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (STORAGE[i].getUuid().equals(uuid)) {
                 return i;
