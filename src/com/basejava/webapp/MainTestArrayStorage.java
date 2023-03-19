@@ -5,7 +5,7 @@ import com.basejava.webapp.storage.SortedArrayStorage;
 import com.basejava.webapp.storage.Storage;
 
 /**
- * Test for your com.basejava.webapp.STORAGE.ArrayStorage implementation
+ * Test for your com.basejava.webapp.storage.ArrayStorage implementation
  */
 public class MainTestArrayStorage {
     private static final Storage ARRAY_STORAGE = new SortedArrayStorage();
