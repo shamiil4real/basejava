@@ -7,6 +7,7 @@ import com.basejava.webapp.model.Resume;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -50,7 +51,7 @@ public abstract class AbstractArrayStorageTest {
     public void update() {
         Resume resume4 = new Resume(UUID_1);
         storage.update(resume4);
-        assertSame(resume4, storage.get(UUID_1));
+        assertEquals(resume4, storage.get(UUID_1));
     }
 
     @Test
@@ -90,12 +91,14 @@ public abstract class AbstractArrayStorageTest {
         for (int i = 3; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
             storage.save(new Resume());
         }
-
-        try {
-            storage.save(new Resume());
-        } catch (StorageException e) {
-            fail("Array overflow before adding extra resume");
-        }
+        Assertions.assertThrows(AssertionFailedError.class, () -> {
+            try {
+                storage.save(new Resume());
+            } catch (StorageException e) {
+                fail("Array overflow before adding extra resume");
+            }
+        });
+        assertEquals(10000, storage.size());
     }
 
     @Test
