@@ -9,13 +9,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
+import static com.basejava.webapp.storage.AbstractArrayStorage.STORAGE_LIMIT;
 import static org.junit.jupiter.api.Assertions.*;
 
-public abstract class AbstractArrayStorageTest {
+public abstract class AbstractStorageTest {
 
     private final Storage storage;
 
-    public AbstractArrayStorageTest(Storage storage) {
+    public AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
 
@@ -95,7 +96,7 @@ public abstract class AbstractArrayStorageTest {
         storage.clear();
         Assertions.assertThrows(AssertionFailedError.class, () -> {
             try {
-                for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
+                for (int i = 0; i < STORAGE_LIMIT; i++) {
                     storage.save(new Resume());
                 }
                 storage.save(new Resume());
@@ -103,7 +104,7 @@ public abstract class AbstractArrayStorageTest {
                 fail("Array overflow before adding extra resume");
             }
         });
-        assertSize(10000);
+        assertSize(STORAGE_LIMIT);
     }
 
     @Test
