@@ -6,59 +6,57 @@ import com.basejava.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-    protected abstract int getIndex(String uuid);
+    protected abstract Object getSearchKey(String uuid);
 
-    protected abstract void makeUpdate(Resume r, int index);
+    protected abstract void doUpdate(Resume r, Object searchKey);
 
-    protected abstract void makeSave(Resume r, int index);
+    protected abstract void doSave(Resume r, Object searchKey);
 
-    protected abstract Resume makeGet(int index);
+    protected abstract Resume doGet(Object searchKey);
 
-    protected abstract void makeDelete(int index);
+    protected abstract void doDelete(Object searchKey);
 
     public abstract void clear();
 
     public final void update(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (isExist(r.getUuid())) {
-            makeUpdate(r, index);
-        } else {
-            throw new NotExistStorageException(r.getUuid());
-        }
+        Object searchKey = getExistedSearchKey(r.getUuid());
+        doUpdate(r, searchKey);
     }
 
     public final void save(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (!isExist(r.getUuid())) {
-            makeSave(r, index);
-        } else {
-            throw new ExistStorageException(r.getUuid());
-        }
+        Object searchKey = getNotExistedSearchKey(r.getUuid());
+        doSave(r, searchKey);
     }
 
     public final Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (isExist(uuid)) {
-            return makeGet(index);
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+        Object searchKey = getExistedSearchKey(uuid);
+        return doGet(searchKey);
     }
 
     public final void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (isExist(uuid)) {
-            makeDelete(index);
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+        Object searchKey = getExistedSearchKey(uuid);
+        doDelete(searchKey);
     }
 
     public abstract Resume[] getAll();
 
     public abstract int size();
 
-    private boolean isExist(String uuid) {
-        return getIndex(uuid) >= 0;
+    protected abstract boolean isExist(Object searchKey);
+
+    private Object getExistedSearchKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
+        if (!isExist(searchKey)) {
+            throw new NotExistStorageException(uuid);
+        }
+        return searchKey;
+    }
+
+    private Object getNotExistedSearchKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
+        if (isExist(searchKey)) {
+            throw new ExistStorageException(uuid);
+        }
+        return searchKey;
     }
 }
