@@ -7,7 +7,7 @@ import java.util.TreeMap;
 
 public class MapStorage extends AbstractStorage {
 
-    Map<String, Resume> map = new TreeMap<>();
+    private final Map<String, Resume> map = new TreeMap<>();
 
     @Override
     protected Object getSearchKey(String searchKey) {
@@ -41,7 +41,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     public Resume[] getAll() {
-        return map.values().toArray(new Resume[map.size()]);
+        return map.values().toArray(new Resume[0]);
     }
 
     @Override
