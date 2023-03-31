@@ -2,16 +2,18 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.model.Resume;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class MapStorage extends AbstractStorage {
+public class MapUuidStorage extends AbstractStorage {
 
     private final Map<String, Resume> map = new TreeMap<>();
 
     @Override
-    protected Object getSearchKey(String searchKey) {
-        return searchKey;
+    protected Object getSearchKey(String uuid) {
+        return uuid;
     }
 
     @Override
@@ -40,8 +42,8 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume[] getAll() {
-        return map.values().toArray(new Resume[0]);
+    public List<Resume> getAll() {
+        return new ArrayList<>(map.values());
     }
 
     @Override
