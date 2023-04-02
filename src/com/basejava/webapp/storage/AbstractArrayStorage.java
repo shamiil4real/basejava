@@ -12,12 +12,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
-    protected abstract Object getSearchKey(String uuid);
-
-    protected abstract void fillDeletedElement(int index);
-
-    protected abstract void addElement(Resume r, int index);
-
     @Override
     public void doUpdate(Resume r, Object searchKey) {
         storage[(Integer) searchKey] = r;
@@ -52,7 +46,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> getAll() {
+    public List<Resume> doCopyAll() {
         return Arrays.asList(Arrays.copyOf(storage, size));
     }
 
@@ -65,4 +59,10 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected boolean isExist(Object searchKey) {
         return (Integer) searchKey >= 0;
     }
+
+    protected abstract Object getSearchKey(String uuid);
+
+    protected abstract void fillDeletedElement(int index);
+
+    protected abstract void addElement(Resume r, int index);
 }

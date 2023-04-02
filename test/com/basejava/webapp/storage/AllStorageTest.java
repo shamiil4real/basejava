@@ -5,7 +5,6 @@ import org.junit.platform.suite.api.Suite;
 
 @Suite
 @SelectClasses({
-        AbstractStorageTest.class,
         ArrayStorageTest.class,
         ListStorageTest.class,
         MapUuidStorageTest.class,
