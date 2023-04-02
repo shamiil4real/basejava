@@ -6,35 +6,35 @@ import com.basejava.webapp.model.Resume;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     protected static final int STORAGE_LIMIT = 10000;
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
     @Override
-    public void doUpdate(Resume r, Object searchKey) {
-        storage[(Integer) searchKey] = r;
+    public void doUpdate(Resume r, Integer index) {
+        storage[index] = r;
     }
 
     @Override
-    public void doSave(Resume r, Object searchKey) {
+    public void doSave(Resume r, Integer index) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", r.getUuid());
         } else {
-            addElement(r, (Integer) searchKey);
+            addElement(r, index);
             size++;
         }
     }
 
     @Override
-    public Resume doGet(Object searchKey) {
-        return storage[(Integer) searchKey];
+    public Resume doGet(Integer index) {
+        return storage[index];
     }
 
     @Override
-    public void doDelete(Object searchKey) {
-        fillDeletedElement((Integer) searchKey);
+    public void doDelete(Integer index) {
+        fillDeletedElement(index);
         storage[size - 1] = null;
         size--;
     }
@@ -56,11 +56,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return (Integer) searchKey >= 0;
+    protected boolean isExist(Integer index) {
+        return index >= 0;
     }
 
-    protected abstract Object getSearchKey(String uuid);
+    protected abstract Integer getSearchKey(String uuid);
 
     protected abstract void fillDeletedElement(int index);
 
