@@ -1,5 +1,7 @@
 package com.basejava.webapp.model;
 
+import java.util.Objects;
+
 public class Link {
 
     private final String name;
@@ -8,6 +10,32 @@ public class Link {
     public Link(String name, String url) {
         this.name = name;
         this.url = url;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Link link = (Link) o;
+
+        if (!Objects.equals(name, link.name)) return false;
+        return url.equals(link.url);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + url.hashCode();
+        return result;
     }
 
     @Override
