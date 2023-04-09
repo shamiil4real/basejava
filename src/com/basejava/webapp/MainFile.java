@@ -6,12 +6,12 @@ import java.util.Objects;
 public class MainFile {
 
     static void PrintFiles(File[] files) {
-        for (File fail : files) {
-            if (fail.isFile()) {
-                System.out.println("    " + fail.getName());
-            } else if (fail.isDirectory()) {
-                System.out.println("/" + fail.getName());
-                PrintFiles(Objects.requireNonNull(fail.listFiles()));
+        for (File file : files) {
+            if (file.isFile()) {
+                System.out.println("    " + file.getName());
+            } else if (file.isDirectory()) {
+                System.out.println("/" + file.getName());
+                PrintFiles(Objects.requireNonNull(file.listFiles()));
             }
         }
     }
