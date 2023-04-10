@@ -38,7 +38,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             doWrite(r, file);
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("File write error ", file.getName(), e);
         }
     }
 
@@ -46,10 +46,10 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected void doSave(Resume r, File file) {
         try {
             file.createNewFile();
-            doWrite(r, file);
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("Couldn't create file ", file.getAbsolutePath(), e);
         }
+        doUpdate(r, file);
     }
 
     @Override
@@ -57,7 +57,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             return doRead(file);
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("File read error ", file.getName(), e);
         }
     }
 
@@ -72,15 +72,14 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        if (directory.listFiles() != null) {
-            List<Resume> listResume = new ArrayList<>();
-            for (File file : directory.listFiles()) {
-                listResume.add(doGet(file));
-            }
-            return listResume;
-        } else {
-            throw new StorageException("Directory is empty: ", directory.getName());
+        if (directory.listFiles() == null) {
+            throw new StorageException("Directory is empty: ", null);
         }
+        List<Resume> listResume = new ArrayList<>();
+        for (File file : directory.listFiles()) {
+            listResume.add(doGet(file));
+        }
+        return listResume;
     }
 
     @Override
@@ -92,20 +91,16 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     public void clear() {
         if (directory.listFiles() != null) {
             for (File file : directory.listFiles()) {
-                if (!file.isDirectory()) {
-                    file.delete();
-                }
+                doDelete(file);
             }
-        } else {
-            throw new StorageException("Directory is empty: ", directory.getName());
         }
     }
 
     @Override
     public int size() {
-        if (directory.listFiles() != null) {
-            return directory.listFiles().length;
+        if (directory.listFiles() == null) {
+            throw new StorageException("Directory is empty: ", null);
         }
-        return 0;
+        return directory.listFiles().length;
     }
 }
