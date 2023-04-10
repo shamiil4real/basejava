@@ -1,8 +1,13 @@
 package com.basejava.webapp.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class TextSection extends AbstractSection {
+public class TextSection extends AbstractSection implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private final String text;
 
