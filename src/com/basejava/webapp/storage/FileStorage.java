@@ -2,6 +2,7 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.storage.serialization.Serializer;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -24,6 +25,14 @@ public class FileStorage extends AbstractStorage<File> {
         }
         this.directory = directory;
     }
+
+    private File[] getListFiles() {
+        if (directory.listFiles() == null) {
+            throw new StorageException("Directory read error: ", null);
+        }
+        return directory.listFiles();
+    }
+
 
     @Override
     protected File getSearchKey(String uuid) {
@@ -67,11 +76,8 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        if (directory.listFiles() == null) {
-            throw new StorageException("Directory read error: ", null);
-        }
         List<Resume> listResume = new ArrayList<>();
-        for (File file : directory.listFiles()) {
+        for (File file : getListFiles()) {
             listResume.add(doGet(file));
         }
         return listResume;
@@ -84,18 +90,13 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        if (directory.listFiles() != null) {
-            for (File file : directory.listFiles()) {
-                doDelete(file);
-            }
+        for (File file : getListFiles()) {
+            doDelete(file);
         }
     }
 
     @Override
     public int size() {
-        if (directory.listFiles() == null) {
-            throw new StorageException("Directory read error: ", null);
-        }
-        return directory.listFiles().length;
+        return getListFiles().length;
     }
 }
