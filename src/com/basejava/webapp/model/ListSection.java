@@ -10,7 +10,10 @@ public class ListSection extends AbstractSection implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-    private final List<String> contents;
+    private List<String> contents;
+
+    public ListSection() {
+    }
 
     public ListSection(String... contents) {
         this(Arrays.asList(contents));
