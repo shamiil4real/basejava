@@ -16,6 +16,10 @@ public class OrganizationSection extends AbstractSection implements Serializable
 
     private List<Organization> organizations;
 
+    public List<Organization> getOrganizations() {
+        return organizations;
+    }
+
     public OrganizationSection() {
     }
 

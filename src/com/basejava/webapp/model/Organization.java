@@ -24,8 +24,16 @@ public class Organization implements Serializable {
     public Organization() {
     }
 
+    public List<Period> getPeriods() {
+        return periods;
+    }
+
     public Organization(String title, String url, Period... periods) {
         this(title, url, Arrays.asList(periods));
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public Organization(String title, String url, List<Period> periods) {
@@ -84,7 +92,7 @@ public class Organization implements Serializable {
         }
 
         public Period(LocalDate startDate, LocalDate endDate, String title) {
-            this(startDate, endDate, title, null);
+            this(startDate, endDate, title, "");
         }
 
         public Period(LocalDate startDate, LocalDate endDate, String title, String description) {
@@ -92,6 +100,14 @@ public class Organization implements Serializable {
             this.endDate = endDate;
             this.title = title;
             this.description = description;
+        }
+
+        public LocalDate getEndDate() {
+            return endDate;
+        }
+
+        public LocalDate getStartDate() {
+            return startDate;
         }
 
         public String getTitle() {
