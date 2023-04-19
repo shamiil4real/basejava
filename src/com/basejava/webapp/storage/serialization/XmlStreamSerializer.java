@@ -6,11 +6,11 @@ import com.basejava.webapp.util.XmlParser;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class XmlSerializer implements Serializer {
+public class XmlStreamSerializer implements StreamSerializerStrategy {
 
     private final XmlParser xmlParser;
 
-    public XmlSerializer() {
+    public XmlStreamSerializer() {
         xmlParser = new XmlParser(
                 Resume.class, Organization.class, Link.class,
                 OrganizationSection.class, TextSection.class, ListSection.class, Organization.Period.class);
