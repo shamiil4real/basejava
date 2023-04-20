@@ -24,10 +24,6 @@ public class Organization implements Serializable {
     public Organization() {
     }
 
-    public List<Period> getPeriods() {
-        return periods;
-    }
-
     public Organization(String title, String url, Period... periods) {
         this(title, url, Arrays.asList(periods));
     }
@@ -36,7 +32,12 @@ public class Organization implements Serializable {
         return title;
     }
 
+    public List<Period> getPeriods() {
+        return periods;
+    }
+
     public Organization(String title, String url, List<Period> periods) {
+        Objects.requireNonNull(periods, "periods must not be null");
         this.website = new Link(title, url);
         this.title = title;
         this.periods = periods;
@@ -96,6 +97,9 @@ public class Organization implements Serializable {
         }
 
         public Period(LocalDate startDate, LocalDate endDate, String title, String description) {
+            Objects.requireNonNull(startDate, "start date must not be null");
+            Objects.requireNonNull(endDate, "end date must not be null");
+            Objects.requireNonNull(title, "title must not be null");
             this.startDate = startDate;
             this.endDate = endDate;
             this.title = title;

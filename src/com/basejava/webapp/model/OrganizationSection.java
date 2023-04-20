@@ -28,6 +28,7 @@ public class OrganizationSection extends AbstractSection implements Serializable
     }
 
     public OrganizationSection(List<Organization> organizations) {
+        Objects.requireNonNull(organizations, "organizations must nut be null");
         this.organizations = organizations;
     }
 

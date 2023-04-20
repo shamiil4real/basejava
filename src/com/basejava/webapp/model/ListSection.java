@@ -20,6 +20,7 @@ public class ListSection extends AbstractSection implements Serializable {
     }
 
     public ListSection(List<String> contents) {
+        Objects.requireNonNull(contents, "contents must not be null");
         this.contents = contents;
     }
 

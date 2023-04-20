@@ -15,6 +15,7 @@ public class TextSection extends AbstractSection implements Serializable {
     }
 
     public TextSection(String text) {
+        Objects.requireNonNull(text, "text must nut be null");
         this.text = text;
     }
 
