@@ -1,5 +1,6 @@
 package com.basejava.webapp.storage.serialization;
 
+import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.*;
 
 import java.io.*;
@@ -49,11 +50,20 @@ public class DataStreamSerializer implements StreamSerializerStrategy {
                     case EXPERIENCE, EDUCATION ->
                             writeSection(dos, ((OrganizationSection) section).getOrganizations(), org -> {
                                 dos.writeUTF(org.getTitle());
+
+                                if (org.getWebsite().getUrl() == null) {
+                                    throw new StorageException("WRITE ERROR: url is null");
+                                }
                                 dos.writeUTF(org.getWebsite().getUrl());
+
                                 writeSection(dos, org.getPeriods(), period -> {
                                     writeDate(dos, period.getStartDate());
                                     writeDate(dos, period.getEndDate());
                                     dos.writeUTF(period.getTitle());
+
+                                    if (period.getDescription() == null) {
+                                        throw new StorageException("WRITE ERROR: description is null");
+                                    }
                                     dos.writeUTF(period.getDescription());
                                 });
                             });
