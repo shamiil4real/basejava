@@ -45,24 +45,24 @@ public class ResumeTestData {
         LocalDate currentDate = LocalDate.now();
         Period javaOpsPeriod = new Period(of(2013, 10, 1), currentDate,
                 "Автор проекта", "Создание, организация и проведение Java онлайн проектов и стажировок.");
-        Organization javaOps = new Organization("Java Online Projects", "url", List.of(javaOpsPeriod));
+        Organization javaOps = new Organization("Java Online Projects", null, List.of(javaOpsPeriod));
 
         Period wrikePeriod = new Period(of(2014, 10, 1), of(2016, 1, 1),
                 "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы " +
                 "управления проектами Wrike (Java 8 API, Maven, " +
                 "Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация," +
                 " авторизация по OAuth1, OAuth2, JWT SSO.");
-        Organization wrike = new Organization("Wrike", "url", List.of(wrikePeriod));
+        Organization wrike = new Organization("Wrike", null , List.of(wrikePeriod));
 
         resume.setSection(SectionType.EXPERIENCE, new OrganizationSection(Arrays.asList(javaOps, wrike)));
 
         Period courseraPeriod = new Period(of(2013, 3, 1), of(2013, 5, 1),
-                "'Functional Programming Principles in Scala' by Martin Odersky");
-        Organization coursera = new Organization("Coursera", "url", List.of(courseraPeriod));
+                "'Functional Programming Principles in Scala' by Martin Odersky", null);
+        Organization coursera = new Organization("Coursera", null, List.of(courseraPeriod));
 
         Period luxoftPeriod = new Period(of(2011, 3, 1), of(2011, 4, 1),
-                "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'");
-        Organization luxoft = new Organization("Luxoft", "url", List.of(luxoftPeriod));
+                "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'", null);
+        Organization luxoft = new Organization("Luxoft", null, List.of(luxoftPeriod));
 
         resume.setSection(SectionType.EDUCATION, new OrganizationSection(Arrays.asList(coursera, luxoft)));
 

@@ -92,10 +92,6 @@ public class Organization implements Serializable {
         public Period() {
         }
 
-        public Period(LocalDate startDate, LocalDate endDate, String title) {
-            this(startDate, endDate, title, "");
-        }
-
         public Period(LocalDate startDate, LocalDate endDate, String title, String description) {
             Objects.requireNonNull(startDate, "start date must not be null");
             Objects.requireNonNull(endDate, "end date must not be null");
@@ -103,7 +99,7 @@ public class Organization implements Serializable {
             this.startDate = startDate;
             this.endDate = endDate;
             this.title = title;
-            this.description = description;
+            this.description = description == null ? "" : description;
         }
 
         public LocalDate getEndDate() {
