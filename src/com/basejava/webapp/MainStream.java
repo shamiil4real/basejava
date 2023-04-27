@@ -10,11 +10,7 @@ public class MainStream {
 
     // Вернуть минимальное возможное число, составленное из уникальных чисел array
     static public int minValue(int[] values) {
-        return Integer.parseInt(Arrays.stream(values)
-                .sorted()
-                .distinct()
-                .mapToObj(Integer::toString)
-                .collect(Collectors.joining()));
+        return Arrays.stream(values).distinct().sorted().reduce(0, (x, y) -> x * 10 + y);
     }
 
     // Если сумма всех чисел в list нечетная -> удалить все нечетные и наоборот
