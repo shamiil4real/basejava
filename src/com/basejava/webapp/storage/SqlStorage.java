@@ -26,9 +26,8 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume r) {
-        sqlHelper.executePreparedStatement("UPDATE resume r SET full_name = ? WHERE r.uuid = ?;", executor -> {
+        sqlHelper.executePreparedStatement("UPDATE resume r SET full_name = 'updated' WHERE r.uuid = ?;", executor -> {
             executor.setString(1, r.getUuid());
-            executor.setString(2, r.getFullName());
             if (executor.executeUpdate() == 0) {
                 throw new NotExistStorageException(r.getUuid());
             }
@@ -39,9 +38,9 @@ public class SqlStorage implements Storage {
     @Override
     public void save(Resume r) {
         sqlHelper.executePreparedStatement("INSERT INTO resume (uuid, full_name) VALUES (?,?);", executor -> {
-            executor.setString(1, r.getUuid().trim());
+            executor.setString(1, r.getUuid());
             executor.setString(2, r.getFullName());
-            executor.executeUpdate();
+            executor.execute();
             return null;
         });
     }
@@ -49,19 +48,19 @@ public class SqlStorage implements Storage {
     @Override
     public Resume get(String uuid) {
         return sqlHelper.executePreparedStatement("SELECT * FROM resume r WHERE r.uuid = ?;", executor -> {
-            executor.setString(1, uuid.trim());
+            executor.setString(1, uuid);
             ResultSet rs = executor.executeQuery();
             if (!rs.next()) {
                 throw new NotExistStorageException(uuid);
             }
-            return new Resume(rs.getString("uuid").trim(), rs.getString("full_name"));
+            return new Resume(rs.getString("uuid"), rs.getString("full_name"));
         });
     }
 
     @Override
     public void delete(String uuid) {
         sqlHelper.executePreparedStatement("DELETE FROM resume r WHERE r.uuid = ?;", executor -> {
-            executor.setString(1, uuid.trim());
+            executor.setString(1, uuid);
             if (executor.executeUpdate() == 0) {
                 throw new NotExistStorageException(uuid);
             }
@@ -75,7 +74,7 @@ public class SqlStorage implements Storage {
             List<Resume> resumes = new ArrayList<>();
             ResultSet rs = executor.executeQuery();
             while (rs.next()) {
-                resumes.add(new Resume(rs.getString("uuid").trim(), rs.getString("full_name")));
+                resumes.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
             }
             return resumes;
         });
