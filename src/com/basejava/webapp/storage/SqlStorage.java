@@ -26,8 +26,9 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume r) {
-        sqlHelper.executePreparedStatement("UPDATE resume r SET full_name = 'updated' WHERE r.uuid = ?;", executor -> {
-            executor.setString(1, r.getUuid());
+        sqlHelper.executePreparedStatement("UPDATE resume r SET full_name = ? WHERE r.uuid = ?;", executor -> {
+            executor.setString(1, r.getFullName());
+            executor.setString(2, r.getUuid());
             if (executor.executeUpdate() == 0) {
                 throw new NotExistStorageException(r.getUuid());
             }
