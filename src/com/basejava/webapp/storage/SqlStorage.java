@@ -35,10 +35,10 @@ public class SqlStorage implements Storage {
                     throw new NotExistStorageException(r.getUuid());
                 }
             }
-            deleteContact(r, connection);
-            insertIntoContact(r, connection);
-            deleteSection(r, connection);
-            insertIntoSection(r, connection);
+            deleteValues(r, connection, "DELETE FROM contact WHERE resume_uuid = ?");
+            insertContacts(r, connection);
+            deleteValues(r, connection, "DELETE FROM section WHERE resume_uuid = ?");
+            insertSections(r, connection);
             return null;
         });
     }
@@ -52,8 +52,8 @@ public class SqlStorage implements Storage {
                         ps.setString(2, r.getFullName());
                         ps.execute();
                     }
-                    insertIntoContact(r, connection);
-                    insertIntoSection(r, connection);
+                    insertContacts(r, connection);
+                    insertSections(r, connection);
                     return null;
                 }
         );
@@ -160,12 +160,12 @@ public class SqlStorage implements Storage {
             switch (type) {
                 case PERSONAL, OBJECTIVE -> resume.setSection(type, new TextSection(value));
                 case ACHIEVEMENT, QUALIFICATION ->
-                        resume.setSection(type, new ListSection(Arrays.asList(value.split("\\r?\\n"))));
+                        resume.setSection(type, new ListSection(Arrays.asList(value.split("\\R"))));
             }
         }
     }
 
-    private void insertIntoContact(Resume r, Connection connection) throws SQLException {
+    private void insertContacts(Resume r, Connection connection) throws SQLException {
         try (PreparedStatement ps = connection.prepareStatement("INSERT INTO  contact (resume_uuid, type, value) " +
                 "VALUES (?,?,?)")) {
             for (Map.Entry<ContactType, String> entry : r.getContacts().entrySet()) {
@@ -178,28 +178,29 @@ public class SqlStorage implements Storage {
         }
     }
 
-    private void insertIntoSection(Resume r, Connection connection) throws SQLException {
+    private void insertSections(Resume r, Connection connection) throws SQLException {
         try (PreparedStatement ps = connection.prepareStatement("INSERT INTO section (resume_uuid, type, value) " +
                 "VALUES (?,?,?)")) {
             for (Map.Entry<SectionType, AbstractSection> entry : r.getSections().entrySet()) {
                 ps.setString(1, r.getUuid());
                 ps.setString(2, entry.getKey().name());
-                ps.setString(3, entry.getValue().toString());
+
+                SectionType type = entry.getKey();
+                AbstractSection section = entry.getValue();
+                switch (type) {
+                    case PERSONAL, OBJECTIVE -> ps.setString(3, ((TextSection) section).getText());
+                    case ACHIEVEMENT, QUALIFICATION ->
+                            ps.setString(3, String.join("\n", ((ListSection) section).getContents()));
+                }
+
                 ps.addBatch();
             }
             ps.executeBatch();
         }
     }
 
-    private static void deleteContact(Resume r, Connection connection) throws SQLException {
-        try (PreparedStatement ps = connection.prepareStatement("DELETE FROM contact WHERE resume_uuid = ?")) {
-            ps.setString(1, r.getUuid());
-            ps.execute();
-        }
-    }
-
-    private static void deleteSection(Resume r, Connection connection) throws SQLException {
-        try (PreparedStatement ps = connection.prepareStatement("DELETE FROM section WHERE resume_uuid = ?")) {
+    private static void deleteValues(Resume r, Connection connection, String sqlQuery) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement(sqlQuery)) {
             ps.setString(1, r.getUuid());
             ps.execute();
         }
