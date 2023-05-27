@@ -1,15 +1,69 @@
 header {
     background: none repeat scroll 0 0 #A6C9E2;
+    text-align: center;
     color: #2E6E9E;
     font-size: 20px;
-    padding: 5px 20px;
+    padding: 20px;
+}
+
+section {
+    min-height: 100vh;
+    width: 900px;
+    margin: auto;
+}
+
+input {
+    min-width: 900px;
+    padding: 10px;
+    border: 1px solid darkgray;
+    background: #d9d8d8;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.contact-item {
+    margin-top: 20px;
+}
+
+.text-input {
+    padding: 0.8rem;
+    width: 100%;
+    border: 2px solid;
+    border-radius: 5px;
+    font-size: 18px;
+}
+
+textarea {
+    background: #d9d8d8;
+}
+
+dl {
+    background: none repeat scroll 0 0 #FAFAFA;
+    margin: 8px 0;
+    padding: 0;
+}
+
+dt {
+    display: inline-block;
+    width: 170px;
+}
+
+dd {
+    display: inline-block;
+    margin-left: 8px;
+    vertical-align: top;
+}
+
+b {
+    margin-top: 3px;
+    margin-bottom: 3px;
 }
 
 table {
     border-collapse: collapse;
     margin-left: auto;
     margin-right: auto;
-    min-width: 600px;
+    min-width: 900px;
 }
 
 td, th {
@@ -37,10 +91,22 @@ tbody tr:last-of-type {
     border-bottom: 2px solid darkblue;
 }
 
+button {
+    margin-top: 10px;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    color: #FAFAFA;
+    background-color: #2E6E9E;
+    outline: none;
+    cursor: pointer;
+}
+
 footer {
     background: none repeat scroll 0 0 #A6C9E2;
+    text-align: center;
     color: #2E6E9E;
     font-size: 20px;
-    padding: 5px 20px;
-    margin: 20px 0;
+    padding: 20px;
+    margin: 0;
 }
