@@ -1,7 +1,7 @@
 package com.basejava.webapp.web;
 
 import com.basejava.webapp.Config;
-import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.model.*;
 import com.basejava.webapp.storage.Storage;
 
 import javax.servlet.ServletConfig;
@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.Writer;
 
 public class ResumeServlet extends HttpServlet {
 
@@ -23,50 +22,92 @@ public class ResumeServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        String uuid = request.getParameter("uuid");
+        String fullName = request.getParameter("fullName");
+        Resume resume;
 
+        if (fullName == null || fullName.trim().equals("")) {
+            resume = isNotExist(uuid) ? new Resume() : storage.get(uuid);
+            request.setAttribute("resume", resume);
+            request.getRequestDispatcher(("/WEB-INF/jsp/edit.jsp")
+            ).forward(request, response);
+            return;
+        }
+
+        if (isNotExist(uuid)) {
+            resume = new Resume(deleteExtraSpaces(fullName));
+        } else {
+            resume = storage.get(uuid);
+        }
+
+        resume.setFullName(fullName);
+
+        for (ContactType type : ContactType.values()) {
+            String value = request.getParameter(type.name());
+            if (value != null && value.trim().length() != 0) {
+                resume.setContact(type, deleteExtraSpaces(value));
+            } else {
+                resume.getContacts().remove(type);
+            }
+        }
+        for (SectionType type : SectionType.values()) {
+            String value = request.getParameter(type.name());
+            if (value != null && value.trim().length() != 0) {
+                switch (type) {
+                    case OBJECTIVE, PERSONAL -> resume.setSection(type,
+                            new TextSection(deleteExtraSpaces(value)));
+                    case ACHIEVEMENT, QUALIFICATION -> resume.setSection(type,
+                            new ListSection(deleteExtraSpaces(value)));
+                }
+            } else {
+                resume.getSections().remove(type);
+            }
+        }
+
+        if (isNotExist(uuid)) {
+            storage.save(resume);
+        } else {
+            storage.update(resume);
+        }
+        response.sendRedirect("resume");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
         String uuid = request.getParameter("uuid");
-        Writer writer = response.getWriter();
-        writer.write("<html>\n" +
-                "<head>\n" +
-                "    <meta charset=\"UTF-8\">\n" +
-                "    <link rel=\"stylesheet\" href=\"css/style.css\">\n" +
-                "    <title>Список резюме</title>\n" +
-                "</head>\n" +
-                "<body>\n" +
-                "<section>\n" +
-                "<table>\n" +
-                "    <thead>\n" +
-                "        <tr>\n" +
-                "            <th>UUID</th>\n" +
-                "            <th>Full Name</th>\n" +
-                "        </tr>\n" +
-                "    </thead>\n" +
-                "<tbody>\n");
-
-        if (uuid == null) {
-            for (Resume r : storage.getAllSorted()) {
-                writer.write("<tr>\n" +
-                        "            <td>" + r.getUuid() + "</td>\n" +
-                        "            <td>" + r.getFullName() + "</td>\n" +
-                        "        </tr>\n");
-            }
-        } else {
-            writer.write("<tr>\n" +
-                    "            <td>" + uuid + "</td>\n" +
-                    "            <td>" + storage.get(uuid).getFullName() + "</td>\n" +
-                    "        </tr>\n");
+        String action = request.getParameter("action");
+        if (action == null) {
+            request.setAttribute("resumes", storage.getAllSorted());
+            request.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(request, response);
+            return;
         }
+        Resume resume;
+        switch (action) {
+            case "add" -> {
+                resume = new Resume();
+                request.setAttribute("resume", resume);
+                request.getRequestDispatcher(("/WEB-INF/jsp/edit.jsp")
+                ).forward(request, response);
+                return;
+            }
+            case "delete" -> {
+                storage.delete(uuid);
+                response.sendRedirect("resume");
+                return;
+            }
+            case "view", "edit" -> resume = storage.get(uuid);
+            default -> throw new IllegalArgumentException("Action " + action + " is illegal");
+        }
+        request.setAttribute("resume", resume);
+        request.getRequestDispatcher(("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
+        ).forward(request, response);
+    }
 
-        writer.write("</tbody>\n" +
-                "</table>\n" +
-                "</section>\n" +
-                "</body>\n" +
-                "</html>\n");
+    private static boolean isNotExist(String uuid) {
+        return uuid == null || uuid.length() == 0;
+    }
+
+    private static String deleteExtraSpaces(String value) {
+        return value.trim().replaceAll(" +", " ");
     }
 }
