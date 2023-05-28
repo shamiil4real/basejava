@@ -27,14 +27,6 @@ public class ResumeServlet extends HttpServlet {
         String fullName = request.getParameter("fullName");
         Resume resume;
 
-        if (fullName == null || fullName.trim().equals("")) {
-            resume = isNotExist(uuid) ? new Resume() : storage.get(uuid);
-            request.setAttribute("resume", resume);
-            request.getRequestDispatcher(("/WEB-INF/jsp/edit.jsp")
-            ).forward(request, response);
-            return;
-        }
-
         if (isNotExist(uuid)) {
             resume = new Resume(deleteExtraSpaces(fullName));
         } else {
